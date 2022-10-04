@@ -1,6 +1,4 @@
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class CifraCesar {
 
@@ -49,35 +47,65 @@ public class CifraCesar {
         return ciphertext;
     }
 
+    /*
+        Método de Análise de Frequência
+        A ideia é criar três ArrayList (letras, frequencia e percentual) e fazer com que cada index
+        dos arrays representem a mesma coisa.
+        Ex: letras[0]="a"
+            frequencia[0] representa quantas vezes "a" aparece na cifra
+            percentual[0] representa qual a porcentagem de "a"
+
+        A variável mapaOrdenado é uma TreeMap, ordenada alfabeticamente, que guarda as informações
+        de todos os arrays para visualizar os dados.
+     */
     public void analiseFrequencia(String ciphertext){
         ArrayList<String> letras = new ArrayList<>();
         ArrayList<Integer> frequencia = new ArrayList<>();
         ArrayList<Float> percentual = new ArrayList<>();
+        Map<String, ArrayList<Float>> mapaOrdenado = new TreeMap<>();
         Integer totalLetras = ciphertext.length();
 
+        /*
+            FOR para criar um ArrayList contendo letras únicas da Cifra
+         */
         for (int i = 0; i < ciphertext.length(); i++){
             if(!letras.contains(String.valueOf(ciphertext.charAt(i)))){
                 letras.add(String.valueOf(ciphertext.charAt(i)));
             }
         }
+
+        /*
+            FOR para inicializar os ArrayLists de frequencia e percentual
+            com o mesmo tamanho do ArrayList de letras únicas
+         */
         for(int i = 0; i < letras.size(); i++){
             frequencia.add(0);
             percentual.add((float)0);
         }
 
+        /*
+            FOR para incrementar o array de frequências para cada aparição
+            da respectiva letra. Este incremento é feito no index de mesmo número em que a letra
+            aparece no array de letras
+         */
         for(int i = 0; i < ciphertext.length(); i++){
             frequencia.set(
                     letras.indexOf(String.valueOf(ciphertext.charAt(i))),
                     (frequencia.get(letras.indexOf(String.valueOf(ciphertext.charAt(i)))))+1);
         }
 
+        /*
+            FOR para juntar todos os arrays em um TreeMap ordenado alfabeticamente
+            Resultado-> letra : quantidade de aparições na cifra : percentual
+         */
         for(int i = 0; i < frequencia.size(); i++){
             percentual.set(i,((float) frequencia.get(i)/totalLetras)*100);
+            mapaOrdenado.put(letras.get(i), new ArrayList<>() );
+            mapaOrdenado.get(letras.get(i)).add((float)frequencia.get(i));
+            mapaOrdenado.get(letras.get(i)).add(percentual.get(i));
 
         }
 
-        System.out.println(letras);
-        System.out.println(frequencia);
-        System.out.println(percentual);
+        System.out.println(mapaOrdenado);
     }
 }
